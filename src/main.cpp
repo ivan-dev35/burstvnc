@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     std::signal(SIGINT, onSig);
     std::signal(SIGTERM, onSig);
 
-    std::string dev = ":99";
+    std::string dev = "auto";
     std::string host = "0.0.0.0";
     uint16_t port = 8080;
     int fps = 60;

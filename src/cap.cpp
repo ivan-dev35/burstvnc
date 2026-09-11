@@ -1,6 +1,9 @@
 #include "cap.hpp"
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/stat.h>
 
 namespace bst {
 
@@ -32,7 +35,52 @@ Cap::~Cap() {
 }
 
 bool Cap::init() {
-    dpy_ = XOpenDisplay(dev_.empty() ? nullptr : dev_.c_str());
+    if (dev_.empty() || dev_ == "auto") {
+        const char* envD = getenv("DISPLAY");
+        if (envD && envD[0]) {
+            dpy_ = XOpenDisplay(envD);
+            if (dpy_) dev_ = envD;
+        }
+        if (!dpy_) {
+            const char* cands[] = {":0", ":1", ":99", nullptr};
+            for (int i = 0; cands[i]; ++i) {
+                dpy_ = XOpenDisplay(cands[i]);
+                if (dpy_) {
+                    dev_ = cands[i];
+                    break;
+                }
+            }
+        }
+        if (!dpy_) {
+            dev_ = ":99";
+            std::string cmd = "Xvfb " + dev_ + " -screen 0 1920x1080x24 -ac +extension COMPOSITE +extension DAMAGE +extension RANDR +extension GLX >/dev/null 2>&1 &";
+            int r = system(cmd.c_str());
+            (void)r;
+            for (int i = 0; i < 30; ++i) {
+                usleep(50000);
+                dpy_ = XOpenDisplay(dev_.c_str());
+                if (dpy_) break;
+            }
+            if (dpy_) {
+                std::string wmCmd = "DISPLAY=" + dev_ + " (which xfce4-session >/dev/null && startxfce4 || which openbox >/dev/null && openbox || xterm) >/dev/null 2>&1 &";
+                r = system(wmCmd.c_str());
+                (void)r;
+            }
+        }
+    } else {
+        dpy_ = XOpenDisplay(dev_.c_str());
+        if (!dpy_) {
+            std::string cmd = "Xvfb " + dev_ + " -screen 0 1920x1080x24 -ac +extension COMPOSITE +extension DAMAGE +extension RANDR +extension GLX >/dev/null 2>&1 &";
+            int r = system(cmd.c_str());
+            (void)r;
+            for (int i = 0; i < 30; ++i) {
+                usleep(50000);
+                dpy_ = XOpenDisplay(dev_.c_str());
+                if (dpy_) break;
+            }
+        }
+    }
+
     if (!dpy_) return false;
 
     scr_ = DefaultScreen(dpy_);

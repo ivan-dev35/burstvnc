@@ -1,5 +1,7 @@
 #include "aud.hpp"
 #include <chrono>
+#include <cstdlib>
+#include <unistd.h>
 
 namespace bst {
 
@@ -19,6 +21,9 @@ Aud::~Aud() {
 }
 
 bool Aud::init(const char* dev) {
+    int r = system("pulseaudio --check || pulseaudio --start --exit-idle-time=-1 >/dev/null 2>&1");
+    (void)r;
+
     pa_sample_spec ss;
     ss.format = PA_SAMPLE_S16LE;
     ss.rate = rate_;
@@ -31,14 +36,21 @@ bool Aud::init(const char* dev) {
     ba.minreq = (uint32_t)-1;
     ba.fragsize = fsz_ * ch_ * sizeof(int16_t);
 
-    int err;
-    pa_ = pa_simple_new(nullptr, "BurstAud", PA_STREAM_RECORD,
-                        dev ? dev : "remote_sink.monitor",
-                        "Aud", &ss, nullptr, &ba, &err);
+    int err = 0;
+    const char* targetDev = dev ? dev : "remote_sink.monitor";
+    pa_ = pa_simple_new(nullptr, "BurstAud", PA_STREAM_RECORD, targetDev, "Aud", &ss, nullptr, &ba, &err);
+
     if (!pa_) {
-        pa_ = pa_simple_new(nullptr, "BurstAud", PA_STREAM_RECORD,
-                            nullptr, "Aud", &ss, nullptr, &ba, &err);
+        pa_ = pa_simple_new(nullptr, "BurstAud", PA_STREAM_RECORD, nullptr, "Aud", &ss, nullptr, &ba, &err);
     }
+
+    if (!pa_) {
+        r = system("pactl load-module module-null-sink sink_name=burst_sink sink_properties=device.description=BurstSink >/dev/null 2>&1; pactl set-default-sink burst_sink >/dev/null 2>&1");
+        (void)r;
+        usleep(50000);
+        pa_ = pa_simple_new(nullptr, "BurstAud", PA_STREAM_RECORD, "burst_sink.monitor", "Aud", &ss, nullptr, &ba, &err);
+    }
+
     if (!pa_) return false;
 
     int oerr;
