@@ -47,4 +47,3 @@ target_link_libraries(burst_cli PRIVATE
     pthread
 )
 
-install(TARGETS burst_srv burst_cli DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
