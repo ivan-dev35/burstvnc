@@ -1,0 +1,22 @@
+*{box-sizing:border-box;margin:0;padding:0;user-select:none}
+body,html{width:100%;height:100%;overflow:hidden;background:#050508;font-family:monospace}
+#box{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:#000}
+#cvs{position:absolute;width:100%;height:100%;object-fit:contain;cursor:none!important}
+#fx{position:absolute;width:100%;height:100%;pointer-events:none;z-index:10}
+#hud{position:absolute;top:12px;left:12px;z-index:100;background:rgba(10,15,25,.8);backdrop-filter:blur(8px);border:1px solid rgba(0,255,180,.25);border-radius:6px;padding:8px 12px;color:#e0e0e0;font-size:11px}
+#hudH{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:#00ffb4;font-weight:700}
+#dot{width:7px;height:7px;border-radius:50%;background:#00ffb4;box-shadow:0 0 8px #00ffb4;display:inline-block;margin-right:6px}
+#hBtn{cursor:pointer;color:#888}
+#hBtn:hover{color:#fff}
+#hudG{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 12px}
+.hi{color:#00ffb4;font-weight:700}
+#bar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:6px;background:rgba(15,20,30,.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;opacity:.25;transition:opacity .2s ease}
+#box:hover #bar,#bar:hover{opacity:1}
+#bar button,#bar select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:4px 10px;font-size:11px;font-weight:600;border-radius:15px;cursor:pointer;outline:none}
+#bar button:hover,#bar select:hover{background:rgba(0,255,180,.2);border-color:#00ffb4;color:#00ffb4}
+#bar button.act{background:#00ffb4;color:#050508;border-color:#00ffb4}
+#ovl{position:absolute;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:200}
+#mdl{background:#111827;border:1px solid rgba(0,255,180,.3);border-radius:10px;padding:24px 32px;text-align:center;color:#f3f4f6;max-width:380px}
+#mdl h2{color:#00ffb4;margin-bottom:8px}
+#mdl p{color:#9ca3af;font-size:12px;margin-bottom:18px}
+#bConn{background:#00ffb4;color:#060b13;font-size:14px;font-weight:700;border:none;border-radius:6px;padding:8px 20px;cursor:pointer}

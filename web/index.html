@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BurstVNC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="box">
+        <canvas id="cvs"></canvas>
+        <canvas id="fx"></canvas>
+        <div id="hud">
+            <div id="hudH">
+                <span id="dot"></span> BurstVNC
+                <span id="hBtn">[HUD]</span>
+            </div>
+            <div id="hudG">
+                <div>FPS: <span id="vFps" class="hi">--</span></div>
+                <div>RTT: <span id="vRtt" class="hi">-- ms</span></div>
+                <div>DEC: <span id="vDec">-- ms</span></div>
+                <div>BPS: <span id="vBps">-- Mbps</span></div>
+                <div>CDC: <span id="vCdc">--</span></div>
+                <div>MOD: <span id="vMod">2D</span></div>
+            </div>
+        </div>
+        <div id="bar">
+            <button id="bMod">🎮 Game</button>
+            <button id="bIdr">🔄 Sync</button>
+            <select id="sBr">
+                <option value="4000">4M</option>
+                <option value="8000" selected>8M</option>
+                <option value="15000">15M</option>
+                <option value="30000">30M</option>
+            </select>
+            <button id="bFs">⛶ Full</button>
+        </div>
+        <div id="ovl">
+            <div id="mdl">
+                <h2>BurstVNC</h2>
+                <p>Zero-Latency WebCodecs Engine</p>
+                <button id="bConn">Connect</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
